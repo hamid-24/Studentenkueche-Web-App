@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head (recipes)}"></head>
+
+<body>
+<div class="container-xxl">
+    <!--Header Fragments-->
+    <div class="mb-4">
+        <div class="bg-secondary-subtle" th:insert="~{fragments :: header}"></div>
+        <header th:replace="~{fragments2 :: header2}"></header>
+    </div>
+
+    <div class="d-flex justify-content-center flex-wrap mb-5">
+        <!-- Create Recipe Form -->
+        <form method="post" action="" class="d-flex bg-secondary-subtle flex-column gap-4 p-4 shadow-lg bg-opacity-50 rounded-5"
+              enctype="multipart/form-data">
+            <!-- Recipe Title -->
+            <div class="form-floating">
+                <input id="title" type="text" name="name" required placeholder="Title"
+                       class="form-control form-control-lg">
+                <label for="title">Title</label>
+            </div>
+
+            <!-- Recipe Image -->
+            <div>
+                <div class="input-group">
+                    <label class="input-group-text">Image</label>
+                    <input class="form-control" type="file" title="test" id="file" name="image" accept="image/*"
+                           required>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <img class="form-control mt-4" style="max-width: 20em; height: auto; display: none" id="image"
+                         src="">
+                </div>
+            </div>
+
+            <!-- Recipe Categories -->
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="veg" type="checkbox" class="form-check-input" name="categories" value="vegetarian">
+                    <label for="veg" class="form-check-label text-nowrap">Vegetarian</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="meat" type="checkbox" class="form-check-input" name="categories" value="meatAndFish">
+                    <label for="meat" class="form-check-label text-nowrap">Meat/Fish</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="dess" type="checkbox" class="form-check-input" name="categories" value="dessert">
+                    <label for="dess" class="form-check-label text-nowrap">Dessert</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="bev" type="checkbox" class="form-check-input" name="categories" value="beverage">
+                    <label for="bev" class="form-check-label text-nowrap">Beverage</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="fast" type="checkbox" class="form-check-input" name="categories" value="fastFood">
+                    <label for="fast" class="form-check-label text-nowrap">Fast Food</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="carb" type="checkbox" class="form-check-input" name="categories" value="carbs">
+                    <label for="carb" class="form-check-label text-nowrap">High Carb</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="snack" type="checkbox" class="form-check-input" name="categories" value="snacks">
+                    <label for="snack" class="form-check-label text-nowrap">Snack</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="soup" type="checkbox" class="form-check-input" name="categories" value="soup">
+                    <label for="soup" class="form-check-label text-nowrap">Soup</label>
+                </div>
+            </div>
+
+            <!-- Recipe Time -->
+            <div class="input-group">
+                <label class="input-group-text">Time</label>
+                <input class="form-control" type="number" name="time" min="0" required>
+                <label class="input-group-text">minutes</label>
+            </div>
+
+            <!-- Recipe Difficulty -->
+            <div class="input-group">
+                <label class="input-group-text">Difficulty</label>
+                <select class="form-select" name="difficulty" required>
+                    <option value="Easy">Easy</option>
+                    <option value="Middle">Middle</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+
+            <!-- Recipe Calories -->
+            <div class="input-group">
+                <label class="input-group-text">Calories</label>
+                <input class="form-control" type="number" name="calories" min="0" required>
+                <span class="input-group-text">kcals</span>
+            </div>
+
+            <!-- Recipe Price -->
+            <div class="input-group">
+                <label class="input-group-text">Price</label>
+                <input class="form-control" type="number" name="price" min="0" required step="0.01">
+                <label class="input-group-text">€</label>
+            </div>
+
+            <!-- Recipe Ingredients -->
+            <div id="ingredientWrapper" class="d-flex flex-column gap-2">
+                <div id="inputTemplate" class="input-group">
+                    <input id="ingredientName" class="form-control" required type="text" name="ingredients" placeholder="Ingredient Description">
+                    <button id="removeIngredient" type="button" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary" id="addIngredient">Add Ingredient</button>
+            </div>
+
+            <!-- Recipe Preparation -->
+            <div>
+                <textarea id="textarea" maxlength="1000" class="form-control" required type="text" name="preparation" placeholder="Preparation..."></textarea>
+                <div id="remaining" class="form-text"></div>
+            </div>
+            <input class="d-none" name="userId" th:value="${session.me.getId()}">
+
+            <!-- Create Button -->
+            <button type="submit" class="btn btn-success">Create</button>
+
+            <script src="/js/ingredients.js"></script>
+        </form>
+    </div>
+</div>
+</body>
+</html>

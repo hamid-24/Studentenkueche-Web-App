@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header2" class="border-bottom border-black border-3 py-2 px-5 rounded-bottom-5 bg-secondary-subtle">
+    <div class="nav nav-tabs border-0 d-flex flex-wrap gap-3">
+        <a class="nav-link p-0 flex-grow-1 text-decoration-none text-center"
+           th:classappend="${active == 'all' ? 'active' : ''}"
+           href="/recipes">
+            <div class="fs-3 fw-semibold">All Recipes</div>
+        </a>
+        <a class="nav-link p-0 flex-grow-1 text-decoration-none text-center"
+           th:classappend="${active == 'new' ? 'active' : ''}" href="/recipes/new">
+            <div class="fs-3 fw-semibold">New Recipe</div>
+        </a>
+        <a class="nav-link p-0 flex-grow-1 text-decoration-none text-center"
+           th:classappend="${active == 'favorites' ? 'active' : ''}" href="/recipes/favorites">
+            <div class="fs-3 fw-semibold">Favorites</div>
+        </a>
+        <a class="nav-link p-0 flex-grow-1 text-decoration-none text-center"
+           th:classappend="${active == 'myrecipes' ? 'active' : ''}" href="/recipes/myrecipes">
+            <div class="fs-3 fw-semibold">My Recipes</div>
+        </a>
+        <a class="nav-link p-0 flex-grow-1 text-decoration-none text-center"
+           th:classappend="${active == 'profile' ? 'active' : ''}" href="/user">
+            <div class="fs-3 fw-semibold">Profile</div>
+        </a>
+        <a class="nav-link p-0 text-danger flex-grow-1 text-decoration-none text-center" href="/logout">
+            <div class="fs-3 fw-semibold">Logout</div>
+        </a>
+    </div>
+</header>
+
+<div th:fragment="recipeList" th:each="recipe, index : ${recipes}" th:object="${averageRatings[index.index]}"
+     style="background: rgba(0, 0, 0, 0.2); max-width: 18em; box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.75)"
+     class="recipe position-relative rounded-5 d-flex">
+    <a class="favorite position-absolute" style="top: 2em; left: 2em; z-index: 1"
+       th:href="'/recipes/favorite/' + ${recipe.getId()}">
+        <svg th:styleappend="${session.me.getFavoriteRecipes().contains(recipe) ? 'fill: red;' : 'fill: black;'}"
+             xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 512 512">
+            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+        </svg>
+    </a>
+    <a th:href="@{/recipes/detail/{id}(id=${recipe.id})}"
+       class="text-decoration-none d-flex flex-column align-items-stretch p-4 gap-1" style="color: inherit">
+        <div style="width: 15em; height: 15em; overflow: hidden" class="rounded-5">
+            <img th:src="'/'+${recipe.getImagePath()}" style="width: 100%; height: 100%; object-fit: cover" class="zoom" alt="no image">
+        </div>
+        <div class="d-flex flex-column gap-1 flex-grow-1">
+            <div class="fs-3 fw-semibold text-center" th:utext="${recipe.getName()}"></div>
+            <div class="d-flex justify-content-between gap-2">
+                <div class="d-flex align-items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="fill: white" height="1em"
+                         viewBox="0 0 512 512">
+                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                        <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
+                    </svg>
+                    <div th:text="${recipe.getTime()} + 'min'"></div>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="fill: white;" height="1em"
+                         viewBox="0 0 640 512">
+                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                        <path d="M96 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32V224v64V448c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V384H64c-17.7 0-32-14.3-32-32V288c-17.7 0-32-14.3-32-32s14.3-32 32-32V160c0-17.7 14.3-32 32-32H96V64zm448 0v64h32c17.7 0 32 14.3 32 32v64c17.7 0 32 14.3 32 32s-14.3 32-32 32v64c0 17.7-14.3 32-32 32H544v64c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32V288 224 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32zM416 224v64H224V224H416z"/>
+                    </svg>
+                    <div class="te" th:text="${recipe.getDifficulty()}"></div>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="fill: white" height="1em"
+                         viewBox="0 0 448 512">
+                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                        <path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/>
+                    </svg>
+                    <div th:text="${recipe.getCalories()} + 'kcal'"></div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-end opacity-75 flex-grow-1">
+                <div th:text="'created by ' + ${recipe.getUser().getUsername()}"></div>
+                <div>&#x2605;<span th:text="${averageRatings[index.index]}"></span></div>
+                <div th:text="${recipe.getPrice()} + ' €' "></div>
+            </div>
+        </div>
+    </a>
+</div>
+</html>

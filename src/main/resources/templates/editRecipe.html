@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head (editRecipe)}"></head>
+
+<body>
+<div class="container-xxl">
+    <!--Header Fragments-->
+    <div class="mb-4">
+        <div class="bg-secondary-subtle" th:insert="~{fragments :: header}"></div>
+        <header th:replace="~{fragments2 :: header2}"></header>
+    </div>
+    <div class="d-flex justify-content-center flex-wrap mb-5">
+        <!-- Recipe Details Edit Form -->
+        <form method="post" th:action="@{/recipes/myrecipes/{Id} (Id=${recipe.id})}"
+              class="d-flex bg-secondary-subtle flex-column gap-4 p-4 shadow-lg bg-opacity-50 rounded-5"
+              enctype="multipart/form-data" th:object="${recipe}">
+            <input type="hidden" name="_method" th:value="PUT">
+
+            <!-- Recipe Title -->
+            <div class="form-floating">
+                <input id="title" type="text" name="name" required placeholder="Title"
+                       class="form-control form-control-lg" th:value="${recipe.getName()}">
+                <label for="title">Title</label>
+            </div>
+
+            <!-- Recipe Image -->
+            <div>
+                <div class="input-group">
+                    <label class="input-group-text">Image</label>
+                    <input class="form-control" type="file" title="test" id="file" name="image" accept="image/*">
+                </div>
+                <div class="d-flex justify-content-center">
+                    <img class="form-control mt-4" style="max-width: 20em; height: auto;" id="image"
+                         th:src="'/'+ ${recipe.getImagePath()}">
+                </div>
+            </div>
+
+            <!-- Recipe Categories -->
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="veg" type="checkbox" class="form-check-input" name="categories" value="vegetarian"
+                           th:checked="${recipe.categories != null && recipe.categories.contains('vegetarian')}">
+                    <label for="veg" class="form-check-label text-nowrap">Vegetarian</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="meat" type="checkbox" class="form-check-input" name="categories" value="meatAndFish"
+                           th:checked="${recipe.categories != null && recipe.categories.contains('meatAndFish')}">
+                    <label for="meat" class="form-check-label text-nowrap">Meat/Fish</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="dess" type="checkbox" class="form-check-input" name="categories" value="dessert"
+                           th:checked="${recipe.categories != null && recipe.categories.contains('dessert')}">
+                    <label for="dess" class="form-check-label text-nowrap">Dessert</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="bev" type="checkbox" class="form-check-input" name="categories" value="beverage"
+                           th:checked="${recipe.categories != null && recipe.categories.contains('beverage')}">
+                    <label for="bev" class="form-check-label text-nowrap">Beverage</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="fast" type="checkbox" class="form-check-input" name="categories" value="fastFood"
+                           th:checked="${recipe.categories != null && recipe.categories.contains('fastFood')}">
+                    <label for="fast" class="form-check-label text-nowrap">Fast Food</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="carb" type="checkbox" class="form-check-input" name="categories" value="carbs"
+                           th:checked="${recipe.categories != null && recipe.categories.contains('carbs')}">
+                    <label for="carb" class="form-check-label text-nowrap">High Carb</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="snack" type="checkbox" class="form-check-input" name="categories" value="snacks"
+                           th:checked="${recipe.categories != null && recipe.categories.contains('snacks')}">
+                    <label for="snack" class="form-check-label text-nowrap">Snacks</label>
+                </div>
+                <div style="flex-basis: 20%" class="d-flex gap-1">
+                    <input id="soup" type="checkbox" class="form-check-input" name="categories" value="soup"
+                           th:checked="${recipe.categories != null && recipe.categories.contains('soup')}">
+                    <label for="soup" class="form-check-label text-nowrap">Soup</label>
+                </div>
+            </div>
+
+            <!-- Recipe Time -->
+            <div class="input-group">
+                <label class="input-group-text">Time</label>
+                <input class="form-control" type="number" name="time" min="0" required th:value="${recipe.time}">
+                <label class="input-group-text">minutes</label>
+            </div>
+
+            <!-- Recipe Difficulty -->
+            <div class="input-group">
+                <label class="input-group-text">Difficulty</label>
+                <select class="form-select" name="difficulty" required>
+                    <option value="Easy" th:value="${recipe.time}">Easy</option>
+                    <option value="Middle" th:selected="${recipe.difficulty == 'Middle'}">Middle</option>
+                    <option value="Hard" th:selected="${recipe.difficulty == 'Hard'}">Hard</option>
+                </select>
+            </div>
+
+            <!-- Recipe Calories -->
+            <div class="input-group">
+                <label class="input-group-text">Calories</label>
+                <input class="form-control" type="number" name="calories" min="0" required th:value="${recipe.calories}">
+                <span class="input-group-text">kcals</span>
+            </div>
+
+            <!-- Recipe Price -->
+            <div class="input-group">
+                <label class="input-group-text">Price</label>
+                <input class="form-control" type="number" name="price" min="0" required step="0.01" th:value="${recipe.price}">
+                <label class="input-group-text">€</label>
+            </div>
+
+            <!-- Recipe Ingredients -->
+            <div id="ingredientWrapper" class="d-flex flex-column gap-2">
+                <!-- Loop through the ingredients and generate input fields -->
+                <div th:each="ingredient, status : ${recipe.ingredients}" class="input-group" id="inputTemplate">
+                    <input id="ingredientName" class="form-control" required type="text" name="ingredients"
+                           placeholder="Ingredient Description" th:value="${ingredient}">
+                    <button id="removeIngredient" type="button" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary" id="addIngredient">Add Ingredient</button>
+            </div>
+
+            <!-- Recipe Preparation -->
+            <div>
+                <textarea id="textarea" maxlength="1000"
+                          class="form-control" required type="text" name="preparation" placeholder="Preparation..."
+                          th:text="${recipe.preparation}">
+                </textarea>
+                <div id="remaining" class="form-text"></div>
+            </div>
+            <input class="d-none" name="userId" th:value="${session.me.getId()}">
+
+            <!--  Save Button -->
+            <button type="submit" class="btn btn-success">Save</button>
+
+            <!-- Cancel Link "Button" -->
+            <a class="btn btn-success" th:href="@{/recipes/myrecipes}">
+                Cancel
+            </a>
+            <script>
+                const file = document.getElementById("file")
+                const img = document.getElementById("image")
+                file.addEventListener('change', function () {
+                    img.style.display = "inline"
+                    img.src = URL.createObjectURL(file.files[0])
+                })
+                const ingredientButton = document.getElementById("addIngredient")
+                const ingredientWrapper = document.getElementById("ingredientWrapper")
+                const inputTemplate = document.getElementById("inputTemplate")
+                ingredientButton.addEventListener("click", function () {
+                    const input = inputTemplate.cloneNode(true)
+                    input.querySelector("#ingredientName").value = ""
+                    const removeButton = input.querySelector("#removeIngredient")
+                    removeButton.style.display = "inline-block"
+                    removeButton.addEventListener("click", function () {
+                        input.remove()
+                    })
+                    ingredientWrapper.appendChild(input)
+                })
+                const textArea = document.getElementById("textarea");
+                const remaining = document.getElementById("remaining");
+                remaining.textContent = "remaining: " + (textArea.maxLength - textArea.value.length);
+                textArea.addEventListener("input", function () {
+                    const length = textArea.value.length;
+                    const remainingChars = textArea.maxLength - length;
+                    remaining.textContent = "remaining: " + remainingChars;
+                });
+            </script>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head (recipes)}"></head>
+<body>
+<div class="container-xxl">
+    <!--Header Fragments-->
+    <div class="mb-4">
+        <div class="bg-secondary-subtle" th:insert="~{fragments :: header}"></div>
+        <header th:replace="~{fragments2 :: header2}"></header>
+    </div>
+
+    <!-- Filters for Recipes -->
+    <div class="d-flex flex-wrap justify-content-center mb-4 gap-2">
+        <div id="filters">
+            <a th:classappend="${activeFilter == 'fast' ? 'active' : ''}" class="btn bg-black">Fast</a>
+            <a th:classappend="${activeFilter == 'cheap' ? 'active' : ''}" class="btn bg-black">Cheap</a>
+            <a th:classappend="${activeFilter == 'popular' ? 'active' : ''}" class="btn bg-black">Popular</a>
+        </div>
+        <div class="btn-group">
+            <a href="?category=all" th:classappend="${activeFilter == 'category' ? 'active' : ''}" class="btn bg-black">Categories</a>
+            <button data-bs-toggle="dropdown" class="btn bg-black dropdown-toggle dropdown-toggle-split"></button>
+            <div class="dropdown-menu">
+                <a href="?category=vegetarian" class="dropdown-item">Vegetarian</a>
+                <a href="?category=meatAndFish" class="dropdown-item">Meat/Fish</a>
+                <a href="?category=dessert" class="dropdown-item">Dessert</a>
+                <a href="?category=beverage" class="dropdown-item">Beverage</a>
+                <a href="?category=fastFood" class="dropdown-item">Fast Food</a>
+                <a href="?category=carbs" class="dropdown-item">High Carb</a>
+                <a href="?category=snacks" class="dropdown-item">Snack</a>
+                <a href="?category=soup" class="dropdown-item">Soup</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Created Recipes -->
+    <div class="d-flex gap-4 flex-wrap justify-content-center mb-5">
+        <div th:replace="~{fragments2 :: recipeList}"></div>
+    </div>
+</div>
+<script src="/js/heartVisibility.js"></script>
+<script src="/js/filter.js"></script>
+<script src="/js/hoverEffect.js"></script>
+<script src="/js/favoriteToggle.js"></script>
+</body>
+</html>
